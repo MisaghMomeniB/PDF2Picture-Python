@@ -52,3 +52,8 @@ root.geometry("400x300")
 # Variables to store file paths
 pdf_path_var = tk.StringVar()
 output_folder_var = tk.StringVar()
+
+# PDF file selection label and button
+tk.Label(root, text=da"PDF File:").pack(pady=5)
+tk.Entry(root, textvariable=pdf_path_var, width=40, state='readonly').pack(padx=10)
+tk.Button(root, text="Select PDF File", command=select_pdf).pack(pady=5)
