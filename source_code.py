@@ -14,3 +14,11 @@ def convert_pdf_to_images(pdf_path, output_folder):
         messagebox.showinfo("Success", "PDF successfully converted to images!")
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
+
+# Function to open a file dialog to select a PDF file
+def select_pdf():
+    file_path = filedialog.askopenfilename(
+        filetypes=[("PDF Files", "*.pdf")], 
+        title="Select PDF File"
+    )
+    pdf_path_var.set(file_path)
