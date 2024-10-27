@@ -48,3 +48,7 @@ def start_conversion():
 root = tk.Tk()
 root.title("PDF to Image Converter")
 root.geometry("400x300")
+
+# Variables to store file paths
+pdf_path_var = tk.StringVar()
+output_folder_var = tk.StringVar()
