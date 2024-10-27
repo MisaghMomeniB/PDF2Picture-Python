@@ -43,3 +43,8 @@ def start_conversion():
 
     # Perform the PDF to image conversion
     convert_pdf_to_images(pdf_path, output_folder)
+
+# Setup the main GUI window
+root = tk.Tk()
+root.title("PDF to Image Converter")
+root.geometry("400x300")
