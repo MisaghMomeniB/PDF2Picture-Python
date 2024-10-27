@@ -27,3 +27,19 @@ def select_pdf():
 def select_output_folder():
     folder_path = filedialog.askdirectory(title="Select Output Folder")
     output_folder_var.set(folder_path)
+
+# Function to start the conversion process after verifying paths
+def start_conversion():
+    pdf_path = pdf_path_var.get()
+    output_folder = output_folder_var.get()
+    
+    # Verify if both PDF file and output folder are selected
+    if not pdf_path:
+        messagebox.showwarning("Warning", "Please select a PDF file!")
+        return
+    if not output_folder:
+        messagebox.showwarning("Warning", "Please select an output folder!")
+        return
+
+    # Perform the PDF to image conversion
+    convert_pdf_to_images(pdf_path, output_folder)
