@@ -58,7 +58,7 @@ tk.Label(root, text=da"PDF File:").pack(pady=5)
 tk.Entry(root, textvariable=pdf_path_var, width=40, state='readonly').pack(padx=10)
 tk.Button(root, text="Select PDF File", command=select_pdf).pack(pady=5)
 
- Output folder selection label and button
+#Output folder selection label and button
 tk.Label(root, text="Output Folder:").pack(pady=5)
 tk.Entry(root, textvariable=output_folder_var, width=40, state='readonly').pack(padx=10)
 tk.Button(root, text="Select Output Folder", command=select_output_folder).pack(pady=5)
