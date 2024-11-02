@@ -77,5 +77,5 @@ file_type_menu.pack(pady=5)
 # Button to start PDF to image conversion
 tk.Button(root, text="Convert to Images", command=start_conversion).pack(pady=20)
 
-# Run the application
+# Run the Application
 root.mainloop()
