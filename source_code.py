@@ -48,6 +48,10 @@ def start_conversion():
     # Perform the PDF to image conversion
     convert_pdf_to_images(pdf_path, output_folder, file_type)
 
+# Function to close the application
+def exit_application():
+    root.quit()
+
 # Setup the main GUI window
 root = tk.Tk()
 root.title("PDF to Image Converter")
@@ -76,6 +80,9 @@ file_type_menu.pack(pady=5)
 
 # Button to start PDF to image conversion
 tk.Button(root, text="Convert to Images", command=start_conversion).pack(pady=20)
+
+# Button to exit the application
+tk.Button(root, text="Exit", command=exit_application).pack(pady=5)
 
 # Run the Application
 root.mainloop()
