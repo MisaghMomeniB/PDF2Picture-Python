@@ -21,12 +21,14 @@ def select_pdf():
         filetypes=[("PDF Files", "*.pdf")], 
         title="Select PDF File"
     )
-    pdf_path_var.set(file_path)
+    if file_path:
+        pdf_path_var.set(file_path)
 
 # Function to open a directory dialog to select the output folder
 def select_output_folder():
     folder_path = filedialog.askdirectory(title="Select Output Folder")
-    output_folder_var.set(folder_path)
+    if folder_path:
+        output_folder_var.set(folder_path)
 
 # Function to start the conversion process after verifying paths and file type
 def start_conversion():
