@@ -10,90 +10,137 @@ I Wrote a Program Using ***Python*** and Tkinter That Allows You to Convert PDF 
 
 # Line-by-line Code Analysis
 
-1. **Importing Libraries**:
-   ```python
-   import tkinter as tk
-   from tkinter import filedialog, messagebox
-   from pdf2image import convert_from_path
-   import os
-   ```
-   - This section imports the necessary libraries for creating a graphical user interface (GUI) using `tkinter` and for converting PDF files to images using `pdf2image`. The `os` library is imported for handling file paths.
+### 1. Importing Required Modules
+```python
+import tkinter as tk  # Tkinter for creating the GUI
+from tkinter import filedialog, messagebox  # File dialog and messagebox for interaction with the user
+from pdf2image import convert_from_path  # pdf2image to convert PDF pages to images
+import os  # os module for file path operations
+```
+- **tkinter**: Used to create the graphical user interface (GUI).
+- **filedialog, messagebox**: Used for file selection and displaying messages (success or error).
+- **pdf2image**: Used for converting PDF pages to images.
+- **os**: Used for file path operations (like combining paths).
 
-2. **Defining the Function to Convert PDF to Images**:
-   ```python
-   def convert_pdf_to_images(pdf_path, output_folder, file_type):
-   ```
-   - This function is responsible for converting each page of a PDF file into an image and saving them in the specified output folder.
+### 2. Function to Convert PDF to Images
+```python
+def convert_pdf_to_images(pdf_path, output_folder, file_type):
+    try:
+        # Convert each page of the PDF to an image using convert_from_path (returns a list of images)
+        images = convert_from_path(pdf_path)
+        
+        # Loop through each image (each page of the PDF)
+        for i, image in enumerate(images):
+            # Define the output file path for each image with the specified file type (e.g., PNG, JPEG)
+            output_path = os.path.join(output_folder, f"page_{i + 1}.{file_type.lower()}")
+            
+            # Save the image in the specified format (file_type.upper() ensures it's in uppercase)
+            image.save(output_path, file_type.upper())
+        
+        # Show a success message once the conversion is done
+        messagebox.showinfo("Success", "PDF successfully converted to images!")
+    
+    except Exception as e:
+        # In case of an error (e.g., if PDF cannot be read), show an error message
+        messagebox.showerror("Error", f"An error occurred: {e}")
+```
+- This function is responsible for converting each page of a PDF into an image. It first uses `convert_from_path` to convert the PDF into images.
+- Then, for each image (representing a page), it generates an output path based on the selected image format (`PNG`, `JPEG`, `BMP`, `TIFF`).
+- If the conversion is successful, it shows a success message. If there's an error (e.g., the PDF can't be read), it shows an error message.
 
-3. **Converting PDF Pages to Images**:
-   ```python
-   images = convert_from_path(pdf_path)
-   ```
-   - Here, `convert_from_path` is used to convert all pages of the PDF into images.
+### 3. Function to Select the PDF File
+```python
+def select_pdf():
+    file_path = filedialog.askopenfilename(
+        filetypes=[("PDF Files", "*.pdf")],  # Limit file selection to PDF files only
+        title="Select PDF File"  # Dialog title
+    )
+    if file_path:
+        pdf_path_var.set(file_path)
+```
+- This function opens a file dialog that allows the user to select a PDF file. Only PDF files are shown in the dialog.
+- When the user selects a file, its path is stored in the `pdf_path_var` variable.
 
-4. **Saving the Images**:
-   ```python
-   for i, image in enumerate(images):
-       output_path = os.path.join(output_folder, f"page_{i + 1}.{file_type.lower()}")
-       image.save(output_path, file_type.upper())
-   ```
-   - In this loop, each image is saved with a specified name (e.g., `page_1.png`) in the output folder. The name of the image is based on the page number.
+### 4. Function to Select the Output Folder
+```python
+def select_output_folder():
+    folder_path = filedialog.askdirectory(title="Select Output Folder")
+    if folder_path:
+        output_folder_var.set(folder_path)
+```
+- This function opens a directory dialog that lets the user choose an output folder to save the converted images.
+- The selected folder path is stored in the `output_folder_var` variable.
 
-5. **Success or Error Message**:
-   ```python
-   messagebox.showinfo("Success", "PDF successfully converted to images!")
-   ```
-   - If the conversion is successful, a success message is displayed. If an error occurs, an error message is shown.
+### 5. Function to Start the Conversion
+```python
+def start_conversion():
+    pdf_path = pdf_path_var.get()
+    output_folder = output_folder_var.get()
+    file_type = file_type_var.get().upper()  # Standardize the file type to uppercase
+    
+    if not pdf_path:
+        messagebox.showwarning("Warning", "Please select a PDF file!")
+        return
+    if not output_folder:
+        messagebox.showwarning("Warning", "Please select an output folder!")
+        return
+    
+    if file_type not in ["PNG", "JPEG", "BMP", "TIFF"]:
+        messagebox.showwarning("Warning", "Unsupported file type selected!")
+        return
 
-6. **Selecting a PDF File**:
-   ```python
-   def select_pdf():
-       file_path = filedialog.askopenfilename(
-           filetypes=[("PDF Files", "*.pdf")], 
-           title="Select PDF File"
-       )
-       pdf_path_var.set(file_path)
-   ```
-   - This function allows the user to select a PDF file and sets the path in a variable.
+    convert_pdf_to_images(pdf_path, output_folder, file_type)
+```
+- This function retrieves the file paths and the selected image format from the variables. It ensures that the user has selected both a PDF file and an output folder, and that the selected image format is valid.
+- If any validation fails (e.g., no PDF or output folder selected, or unsupported file type), a warning message is shown.
+- If everything is valid, the `convert_pdf_to_images` function is called to start the conversion process.
 
-7. **Selecting Output Folder**:
-   ```python
-   def select_output_folder():
-       folder_path = filedialog.askdirectory(title="Select Output Folder")
-       output_folder_var.set(folder_path)
-   ```
-   - This function allows the user to select a folder for saving the images and sets the path in a variable.
+### 6. Function to Exit the Application
+```python
+def exit_application():
+    root.quit()
+```
+- This function is used to close the application when the user clicks the "Exit" button.
 
-8. **Starting the Conversion Process**:
-   ```python
-   def start_conversion():
-   ```
-   - This function is called to initiate the conversion process. It first checks the inputs (whether the PDF file and output folder have been selected) and then calls the conversion function.
+### 7. Setting Up the GUI
+```python
+root = tk.Tk()  # Create a Tkinter window
+root.title("PDF to Image Converter")  # Set the window title
+root.geometry("400x525")  # Set the window size (width x height)
+```
+- Here, the main window for the application is created using Tkinter. The title and size of the window are set.
 
-9. **Setting Up the GUI**:
-   ```python
-   root = tk.Tk()
-   root.title("PDF to Image Converter")
-   root.geometry("400x350")
-   ```
-   - This section creates the main application window with a title and specified dimensions.
+### 8. Variables for Storing File Paths and Image Format
+```python
+pdf_path_var = tk.StringVar()  # Variable to store the selected PDF file path
+output_folder_var = tk.StringVar()  # Variable to store the selected output folder path
+file_type_var = tk.StringVar(value="PNG")  # Variable to store the selected image format (default is PNG)
+```
+- These variables are used to store the selected PDF file path, the output folder path, and the selected image format.
 
-10. **Defining Variables to Store Paths and Image Format**:
-    ```python
-    pdf_path_var = tk.StringVar()
-    output_folder_var = tk.StringVar()
-    file_type_var = tk.StringVar(value="PNG")  # Default to PNG
-    ```
-    - Variables are created to hold the paths of the PDF file, output folder, and the selected image format.
+### 9. GUI Components (Labels, Entry Boxes, Buttons)
+```python
+tk.Label(root, text="PDF File:").pack(pady=5)  # Label for the PDF file input
+tk.Entry(root, textvariable=pdf_path_var, width=40, state='readonly').pack(padx=10)  # Display the PDF file path in a readonly entry box
+tk.Button(root, text="Select PDF File", command=select_pdf).pack(pady=5)  # Button to open file dialog for PDF selection
 
-11. **Creating GUI Elements**:
-    - Labels and input fields for each input (PDF file, output folder, and image format) are created. Buttons for selecting the file and folder, as well as a button to start the conversion, are also included.
+tk.Label(root, text="Output Folder:").pack(pady=5)  # Label for the output folder input
+tk.Entry(root, textvariable=output_folder_var, width=40, state='readonly').pack(padx=10)  # Display the output folder path in a readonly entry box
+tk.Button(root, text="Select Output Folder", command=select_output_folder).pack(pady=5)  # Button to open folder dialog for output folder selection
 
-12. **Running the Application**:
-    ```python
-    root.mainloop()
-    ```
-    - Finally, the program enters the main loop to be ready for user interaction.
+tk.Label(root, text="Select Image Format:").pack(pady=5)  # Label for the image format selection
+file_type_options = ["PNG", "JPEG", "BMP", "TIFF"]  # List of supported image formats
+file_type_menu = tk.OptionMenu(root, file_type_var, *file_type_options).pack(pady=5)
 
-### Purpose of the Code
-The overall purpose of this code is to provide a user-friendly interface for converting PDF files into image formats (like PNG, JPEG, BMP, and TIFF) using a graphical interface, allowing users to easily select a PDF file and an output folder for the converted images.
+tk.Button(root, text="Convert to Images", command=start_conversion).pack(pady=20)  # Button to initiate the PDF to image conversion
+
+tk.Button(root, text="Exit", command=exit_application).pack(pady=5)  # Button to exit the application
+```
+- **Labels, Entry Boxes, and Buttons**: These components are added to the window for user interaction. 
+  - Labels display the text for various fields (PDF file, output folder, image format).
+  - Entry boxes display the paths of the selected PDF and output folder (in a read-only mode).
+  - Buttons allow the user to select a PDF file, select an output folder, choose an image format, start the conversion, and exit the application.
+
+### 10. Starting the GUI Event Loop
+```python
+root.mainloop()
